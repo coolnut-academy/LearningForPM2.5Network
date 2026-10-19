@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy Math Lab 🌲 | เรียนรู้โปรเจกต์คณิตศาสตร์เครือข่าย PM2.5 พยากรณ์จุดความร้อน YSC 2027</title>
+  
+  <!-- Google Fonts: Mali (หัวข้อน่ารัก) & Sarabun (เนื้อหาอ่านง่าย) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mali:ital,wght@0,400;0,600;0,700;1,400&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- KaTeX สำหรับแสดงผลสมการคณิตศาสตร์อย่างสวยงาม -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --bg-cream: #FFFDF9;
+      --bg-Latte: #F6EFE6;
+      --bg-card: #FFFFFF;
+      --text-main: #433633;
+      --text-muted: #7C6A65;
+      --primary-coral: #E07A5F;
+      --primary-coral-light: #FCECE8;
+      --secondary-sage: #81B29A;
+      --secondary-sage-light: #EAF4EF;
+      --accent-mustard: #F2CC8F;
+      --accent-mustard-light: #FDF6E7;
+      --accent-berry: #B56576;
+      --border-soft: #E8DFD5;
+      --shadow-cozy: 0 8px 24px rgba(67, 54, 51, 0.06);
+      --shadow-hover: 0 12px 28px rgba(67, 54, 51, 0.11);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background-color: var(--bg-cream);
+      background-image: radial-gradient(#E8DFD5 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--text-main);
+      line-height: 1.75;
+      font-size: 16px;
+    }
+
+    h1, h2, h3, h4, .cozy-font {
+      font-family: 'Mali', cursive;
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    /* Top Header */
+    .top-navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 253, 249, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--border-soft);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      background: var(--primary-coral-light);
+      border: 2px solid var(--primary-coral);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .brand-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .progress-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      max-width: 420px;
+      justify-content: flex-end;
+    }
+
+    .progress-bar-bg {
+      flex: 1;
+      height: 14px;
+      background: var(--bg-Latte);
+      border-radius: 99px;
+      overflow: hidden;
+      border: 1px solid var(--border-soft);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--secondary-sage), var(--primary-coral));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      font-family: 'Mali', cursive;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--primary-coral);
+      white-space: nowrap;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-cozy {
+      font-family: 'Mali', cursive;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 99px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background: var(--primary-coral);
+      color: white;
+      box-shadow: 0 4px 12px rgba(224, 122, 95, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: #d0694e;
+      transform: translateY(-2px);
+    }
+
+    .btn-sage {
+      background: var(--secondary-sage);
+      color: white;
+      box-shadow: 0 4px 12px rgba(129, 178, 154, 0.25);
+    }
+
+    .btn-sage:hover {
+      background: #6fa088;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--text-main);
+      border-color: var(--border-soft);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary-coral);
+      background: var(--primary-coral-light);
+    }
+
+    /* Main Container Layout */
+    .app-container {
+      max-width: 1240px;
+      margin: 28px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* Sidebar Step Navigation */
+    .sidebar {
+      background: var(--bg-card);
+      border: 2px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-cozy);
+      position: sticky;
+      top: 88px;
+    }
+
+    .sidebar-header {
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px dashed var(--border-soft);
+    }
+
+    .step-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .step-item {
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      border: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s ease;
+      background: var(--bg-cream);
+    }
+
+    .step-item:hover {
+      border-color: var(--accent-mustard);
+      transform: translateX(4px);
+    }
+
+    .step-item.active {
+      background: var(--primary-coral-light);
+      border-color: var(--primary-coral);
+    }
+
+    .step-item.completed .step-badge {
+      background: var(--secondary-sage);
+      color: white;
+      border-color: var(--secondary-sage);
+    }
+
+    .step-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Mali', cursive;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .step-info {
+      flex: 1;
+    }
+
+    .step-title {
+      font-family: 'Mali', cursive;
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--text-main);
+    }
+
+    .step-desc {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .team-card-mini {
+      margin-top: 20px;
+      padding: 14px;
+      background: var(--accent-mustard-light);
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--accent-mustard);
+      font-size: 0.82rem;
+    }
+
+    /* Lesson Content Area */
+    .content-area {
+      background: var(--bg-card);
+      border: 2px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: var(--shadow-cozy);
+      min-height: 650px;
+    }
+
+    .step-section {
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .step-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lesson-tag {
+      display: inline-block;
+      padding: 4px 14px;
+      background: var(--secondary-sage-light);
+      color: #3b6e57;
+      border-radius: 99px;
+      font-family: 'Mali', cursive;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    .lesson-title {
+      font-size: 1.85rem;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+
+    .lesson-lead {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 2px dashed var(--border-soft);
+    }
+
+    /* Cozy Callout Boxes */
+    .analogy-box {
+      background: var(--accent-mustard-light);
+      border: 2px solid var(--accent-mustard);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin: 22px 0;
+      position: relative;
+    }
+
+    .analogy-title {
+      font-family: 'Mali', cursive;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #9c6d1e;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .concept-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .concept-card {
+      background: var(--bg-cream);
+      border: 2px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .concept-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--secondary-sage);
+    }
+
+    .concept-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .math-box {
+      background: #F8FAFC;
+      border: 2px solid #CBD5E1;
+      border-left: 6px solid var(--primary-coral);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    .external-links-box {
+      background: var(--secondary-sage-light);
+      border: 2px dashed var(--secondary-sage);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      margin: 24px 0;
+    }
+
+    .external-links-title {
+      font-family: 'Mali', cursive;
+      font-weight: 700;
+      color: #2f5e49;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ext-link-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      list-style: none;
+    }
+
+    .ext-link-item a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      padding: 6px 14px;
+      border-radius: 99px;
+      color: #2f5e49;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: 1px solid var(--secondary-sage);
+      transition: all 0.2s ease;
+    }
+
+    .ext-link-item a:hover {
+      background: var(--secondary-sage);
+      color: white;
+    }
+
+    /* Interactive Sandbox */
+    .sandbox-box {
+      background: var(--bg-Latte);
+      border: 2px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin: 26px 0;
+    }
+
+    .sandbox-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .slider-group {
+      background: white;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-soft);
+    }
+
+    .slider-group label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary-coral);
+      cursor: pointer;
+    }
+
+    .sandbox-result {
+      margin-top: 18px;
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 18px;
+      border: 2px solid var(--primary-coral);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .metric-pill {
+      padding: 8px 16px;
+    }
+
+    .metric-pill .val {
+      font-family: 'Mali', cursive;
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--primary-coral);
+    }
+
+    /* Stepwise Ladder Table */
+    .cozy-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.95rem;
+      background: white;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 2px solid var(--border-soft);
+    }
+
+    .cozy-table th {
+      background: var(--bg-Latte);
+      font-family: 'Mali', cursive;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 2px solid var(--border-soft);
+    }
+
+    .cozy-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .cozy-table tr:last-child td {
+      border-bottom: none;
+      background: var(--primary-coral-light);
+      font-weight: 600;
+    }
+
+    /* Quiz Section */
+    .quiz-container {
+      margin-top: 36px;
+      background: linear-gradient(180deg, #FFFDF9 0%, #FCECE8 100%);
+      border: 2px solid var(--primary-coral);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+
+    .quiz-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .quiz-question-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 18px;
+      border: 1.5px solid var(--border-soft);
+    }
+
+    .quiz-q-title {
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-size: 1.02rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .quiz-option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border-soft);
+      background: var(--bg-cream);
+      cursor: pointer;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.96rem;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+    }
+
+    .quiz-option-btn:hover {
+      border-color: var(--primary-coral);
+      background: white;
+    }
+
+    .quiz-option-btn.correct {
+      background: #DCFCE7;
+      border-color: #22C55E;
+      color: #14532D;
+      font-weight: 600;
+    }
+
+    .quiz-option-btn.wrong {
+      background: #FEE2E2;
+      border-color: #EF4444;
+      color: #7F1D1D;
+    }
+
+    .quiz-feedback {
+      margin-top: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      display: none;
+    }
+
+    .quiz-feedback.show {
+      display: block;
+    }
+
+    .quiz-feedback.ok {
+      background: #F0FDF4;
+      color: #166534;
+      border: 1px solid #86EFAC;
+    }
+
+    .quiz-feedback.err {
+      background: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #FCA5A5;
+    }
+
+    /* Footer Navigation inside Lesson */
+    .lesson-footer-nav {
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 2px dashed var(--border-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* Accordion Q&A for Defense */
+    .qa-item {
+      border: 2px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+      overflow: hidden;
+      background: var(--bg-cream);
+    }
+
+    .qa-question {
+      width: 100%;
+      text-align: left;
+      padding: 16px 20px;
+      background: none;
+      border: none;
+      font-family: 'Mali', cursive;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .qa-answer {
+      padding: 0 20px 18px 20px;
+      display: none;
+      color: var(--text-main);
+      border-top: 1px dashed var(--border-soft);
+      background: white;
+    }
+
+    .qa-item.open .qa-answer {
+      display: block;
+      padding-top: 14px;
+    }
+
+    /* Certificate Hero */
+    .launch-portal {
+      background: linear-gradient(135deg, #FCECE8 0%, #EAF4EF 50%, #FDF6E7 100%);
+      border: 3px solid var(--primary-coral);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      text-align: center;
+      margin: 28px 0;
+      box-shadow: var(--shadow-hover);
+    }
+
+    .launch-btn-giant {
+      font-family: 'Mali', cursive;
+      font-size: 1.25rem;
+      font-weight: 700;
+      padding: 16px 32px;
+      background: var(--primary-coral);
+      color: white;
+      border-radius: 99px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+      box-shadow: 0 10px 25px rgba(224, 122, 95, 0.4);
+      transition: all 0.25s ease;
+    }
+
+    .launch-btn-giant:hover {
+      transform: translateY(-4px) scale(1.03);
+      background: #c96044;
+    }
+
+    @media (max-width: 920px) {
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: static;
+      }
+      .content-area {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="top-navbar">
+    <div class="brand">
+      <div class="brand-logo">🌲</div>
+      <div>
+        <div class="brand-title cozy-font">Cozy Math & Fire Lab (YSC 2027)</div>
+        <div class="brand-sub">คอร์สเรียนออนไลน์จาก 0 สู่การเป็นเจ้าของโครงงานคณิตศาสตร์เครือข่าย PM2.5</div>
+      </div>
+    </div>
+
+    <div class="progress-wrapper">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressBar"></div>
+      </div>
+      <div class="progress-text" id="progressText">ผ่านแล้ว 0/7 บทเรียน</div>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn-cozy btn-outline" onclick="resetProgress()" title="เริ่มเรียนใหม่ทั้งหมด">🔄 รีเซ็ตความจำ</button>
+      <a href="https://coolnut-academy.github.io/YSC-PM2.5Graph-Signal-Processing/" target="_blank" rel="noopener" class="btn-cozy btn-sage">
+        🚀 เปิดเว็บโปรเจกต์จริง
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="app-container">
+    
+    <!-- Left Sidebar: Steps -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3 class="cozy-font">🗺️ แผนที่การเรียนรู้</h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">คลิกเลือกบทเรียนเพื่อทบทวนซ้ำได้ตลอดเวลา ระบบจำคะแนนให้อัตโนมัติ!</p>
+      </div>
+
+      <ul class="step-list" id="stepListNav">
+        <!-- Rendered by JS -->
+      </ul>
+
+      <div class="team-card-mini">
+        <div class="cozy-font" style="font-weight: 700; margin-bottom: 6px;">👩‍🔬 ทีมผู้พัฒนา (ม.4)</div>
+        <div>1. น.ส.พีชญา สุธรรม</div>
+        <div>2. น.ส.พนิดา นันทภัทร</div>
+        <div>3. น.ส.ฟ้าใส มุ่งศรีโสภณ</div>
+        <div style="margin-top: 6px; font-weight: 600;">🏫 รร.ห้องสอนศึกษา ในพระอุปถัมภ์ฯ จ.แม่ฮ่องสอน</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">ที่ปรึกษา: อ.สาธิต ศิริวัชน์, อ.พรไพลิน ตาใฝ</div>
+      </div>
+    </aside>
+
+    <!-- Right Content Area -->
+    <main class="content-area">
+
+      <!-- ==================== STEP 1 ==================== -->
+      <section class="step-section active" id="step-0">
+        <span class="lesson-tag">Step 1 / 7 • ปูพื้นฐานจาก 0</span>
+        <h1 class="lesson-title">🌱 ทำไมต้องเป็น "คณิตศาสตร์" มาช่วยจับสัญญาณจุดความร้อน?</h1>
+        <p class="lesson-lead">
+          ยินดีต้อนรับสู่ห้องแล็บสุดอบอุ่น! ก่อนที่เราจะไปดูสมการเท่ๆ เรามาทำความเข้าใจกันก่อนว่า โปรเจกต์นี้กำลังแก้ปัญหาอะไร และทำไมถึงส่งประกวดในสาขา <strong>คณิตศาสตร์และสถิติประยุกต์ (MAAP)</strong> ไม่ใช่โครงงานคอมพิวเตอร์ทั่วไป!
+        </p>
+
+        <h3>🏔️ จุดเริ่มต้นจากปัญหาใกล้ตัวที่แม่ฮ่องสอนและภาคเหนือ</h3>
+        <p>
+          ทุกๆ ปีในช่วงฤดูแล้ง (ม.ค. – พ.ค.) ภาคเหนือของไทยมีภูมิประเทศเป็น <strong>"แอ่งกระทะล้อมรอบด้วยภูเขา"</strong> ต้องเจอกับวิกฤตไฟป่าและการเผาชีวมวล พอเกิดการเผาไหม้ก็จะเกิดควันและฝุ่นจิ๋ว $PM_{2.5}$ ลอยไปตามลมเข้าสู่สถานีวัดคุณภาพอากาศของกรมควบคุมมลพิษ (Air4Thai)
+        </p>
+
+        <div class="analogy-box">
+          <div class="analogy-title">💡 เปรียบเทียบให้เห็นภาพ: "โมเดลกล่องดำ" vs "โมเดลคณิตศาสตร์โปร่งใส"</div>
+          <p>
+            เวลาคนส่วนใหญ่ทำโครงงานพยากรณ์ไฟป่า มักจะเอาข้อมูลทุกอย่างโยนใส่ <strong>Machine Learning กล่องดำ (Black-box ML)</strong> เช่น Deep Learning หรือ XGBoost เหมือนโยนวัตถุดิบใส่ <em>"หม้อวิเศษทึบแสง"</em> ได้คำตอบออกมาแต่ไม่รู้เลยว่า ข้างในหม้อปรุงรสยังไง! <br><br>
+            แต่โครงงานของพวกเราเลือกสร้าง <strong>"ห้องครัวกระจกใสด้วยคณิตศาสตร์ (Mathematical & Statistical Modeling)"</strong> เราเขียนสมการเองทุกขั้น เพื่อตอบคำถามวิทยาศาสตร์ให้ได้ว่า: <strong>"ถ้าเรารู้อากาศ ภูมิประเทศ และประวัติไฟเดิมอยู่แล้ว ข้อมูลเครือข่ายฝุ่น PM2.5 ที่พัดมากับลม จะช่วยเพิ่มความแม่นยำในการทายโอกาสเกิดจุดความร้อนในอีก 24 ชั่วโมงข้างหน้าได้จริงไหม?"</strong>
+          </p>
+        </div>
+
+        <div class="concept-card-grid">
+          <div class="concept-card">
+            <div class="concept-icon">🛰️</div>
+            <h4 class="cozy-font">จุดความร้อน (Active-Fire Hotspot) คืออะไร?</h4>
+            <p style="font-size: 0.9rem;">
+              คือจุดที่ดาวเทียม <strong>NASA FIRMS (ระบบ VIIRS 375m)</strong> โคจรผ่านแล้วตรวจพบความร้อนสูงผิดปกติบนพื้นดิน เราใช้สิ่งนี้เป็น "เฉลยคำตอบ ($Y_i$)" โดยระมัดระวังว่าไม่ใช่ทุกจุดจะเป็นไฟป่าธรรมชาติ (อาจเป็นการเผาเกษตรกรรมก็ได้)
+            </p>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">💨</div>
+            <h4 class="cozy-font">ฝุ่น PM2.5 ไม่ใช่สาเหตุที่ทำให้เกิดไฟ!</h4>
+            <p style="font-size: 0.9rem;">
+              ฝุ่นไม่ได้จุดไฟ! แต่ในทางสถิติ ฝุ่นที่ลอยสะสมผิดปกติอาจเป็น <strong>"ร่องรอย (Proxy)"</strong> ของการเริ่มเผาขนาดเล็กใต้ต้นไม้ที่ดาวเทียมยังมองไม่เห็น หรือความแห้งแล้งสะสมในพื้นที่รอบข้าง
+            </p>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">📏</div>
+            <h4 class="cozy-font">แบ่งแผนที่เป็นตารางหมากรุก (Grid Cell)</h4>
+            <p style="font-size: 0.9rem;">
+              เราตีตารางพื้นที่ศึกษาออกเป็นช่องกริดขนาด $0.1^\circ \times 0.1^\circ$ (ประมาณ $11 \times 11\text{ กม.}$) แล้วทายโอกาสเกิดจุดความร้อนทุกเช้าเวลา <strong>06:00 น.</strong> ล่วงหน้าไป 24 ชั่วโมง
+            </p>
+          </div>
+        </div>
+
+        <div class="external-links-box">
+          <div class="external-links-title">🔗 ลิงก์เรียนเสริมภายนอก (เข้าใจที่มาของข้อมูลภายใน 3 นาที)</div>
+          <ul class="ext-link-list">
+            <li class="ext-link-item"><a href="https://firms.modaps.eosdis.nasa.gov/map/" target="_blank" rel="noopener">🛰️ ดูแผนที่จุดความร้อนจริง NASA FIRMS</a></li>
+            <li class="ext-link-item"><a href="http://air4thai.pcd.go.th/webV3/#/Home" target="_blank" rel="noopener">🌫️ เว็บไซต์สถานีวัดฝุ่น Air4Thai</a></li>
+            <li class="ext-link-item"><a href="https://www. cell.com/heliyon/fulltext/S2405-8440(24)09952-3" target="_blank" rel="noopener">📄 งานวิจัยตั้งต้น Tang et al. (2024)</a></li>
+          </ul>
+        </div>
+
+        <div class="quiz-container" id="quiz-0"></div>
+      </section>
+
+      <!-- ==================== STEP 2 ==================== -->
+      <section class="step-section" id="step-1">
+        <span class="lesson-tag">Step 2 / 7 • ข้อมูลพื้นฐาน & การจับผิดควันเดิม</span>
+        <h1 class="lesson-title">🗺️ วัตถุดิบทั้ง 5 ชนิด & กฎเหล็ก "ห้ามโกงข้อสอบ!"</h1>
+        <p class="lesson-lead">
+          ก่อนจะรู้ว่าฝุ่น PM2.5 มีประโยชน์ไหม เราต้องสร้าง <strong>"โมเดลฐานด้านกายภาพ ($M_0$)"</strong> ที่เก่งที่สุดขึ้นมาก่อน พร้อมทั้งตั้งกติกาคัดกรองไม่ให้โมเดลสับสนระหว่าง "ทายไฟล่วงหน้า" กับ "เห็นควันของไฟที่กำลังไหม้อยู่แล้ว"!
+        </p>
+
+        <h3>🧺 1. วัตถุดิบข้อมูลเปิด (Open Datasets) ที่ใช้ในโมเดลฐาน $M_0$</h3>
+        <div class="concept-card-grid">
+          <div class="concept-card">
+            <div class="concept-icon">🌦️</div>
+            <h4 class="cozy-font">สภาพอากาศ (ERA5-Land)</h4>
+            <p style="font-size: 0.88rem;">อุณหภูมิ ความชื้นสัมพัทธ์ ความเร็วลม (แกน $u,v$) ปริมาณฝนสะสม และความชื้นในดินย้อนหลัง 24 ชม.</p>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">⛰️</div>
+            <h4 class="cozy-font">ภูมิประเทศ (SRTM DEM)</h4>
+            <p style="font-size: 0.88rem;">ความสูงจากระดับน้ำทะเล (Elevation) ความลาดชันของภูเขา (Slope) และทิศทางลาด (Aspect)</p>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">🌿</div>
+            <h4 class="cozy-font">ความเขียวพืชพรรณ (MODIS)</h4>
+            <p style="font-size: 0.88rem;">ดัชนี NDVI / EVI บอกว่าต้นไม้และใบไม้ในป่านั้นแห้งกรอบพร้อมเป็นเชื้อเพลิงแค่ไหน</p>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">📅</div>
+            <h4 class="cozy-font">ฤดูกาล ($S_1, S_2$) & ประวัติเดิม ($C_i$)</h4>
+            <p style="font-size: 0.88rem;">ใช้วงกลมตรีโกณมิติ $\sin, \cos$ แทนวันในรอบปี และคำนวณสถิติว่าช่องกริดนั้นเคยเกิดไฟบ่อยแค่ไหนในอดีต ($C_i$)</p>
+          </div>
+        </div>
+
+        <div class="math-box">
+          <strong>📌 สูตรคำนวณแนวโน้มการเกิดจุดความร้อนในอดีต ($C_i$ — Historical Hotspot Tendency):</strong>
+          $$C_i = \frac{n_i^{\text{hot}} + 0.5}{n_i + 1}$$
+          <p style="font-size: 0.9rem; margin-top: 8px;">
+            เมื่อ $n_i^{\text{hot}}$ คือจำนวนวันที่เคยเกิดจุดความร้อนในช่องกริด $i$ และ $n_i$ คือจำนวนวันทั้งหมดใน <strong>ชุดข้อมูลฝึก (อดีต)</strong> ที่บวก $0.5$ และ $1$ เข้าไปเรียกว่า <em>Laplace Smoothing</em> เพื่อป้องกันไม่ให้พื้นที่ที่ไม่เคยเกิดไฟเลยมีโอกาสเป็น $0$ สนิท!
+          </p>
+        </div>
+
+        <h3>🛡️ 2. Spatiotemporal Exclusion ($E_i$): แยก "พยากรณ์ล่วงหน้า" ออกจาก "ควันไฟเดิม"</h3>
+        <div class="analogy-box">
+          <div class="analogy-title">🕵️‍♀️ เปรียบเทียบให้เห็นภาพ: ทำไมต้องตัดไฟที่เกิดอยู่ก่อนแล้วออก?</div>
+          <p>
+            สมมติว่าบ้านข้างๆ กำลังปิ้งหมูปิ้งควันโขมงตั้งแต่ตี 5 พอถึงเวลา 6 โมงเช้า เราได้กลิ่นควันแล้วทายว่า <em>"วันนี้บ้านข้างๆ จะต้องปิ้งหมูปิ้งแน่ๆ!"</em> แบบนี้ไม่เรียกว่าพยากรณ์ล่วงหน้าครับ แต่เรียกว่า <strong>"เห็นควันของไฟที่ติดอยู่แล้ว!"</strong><br><br>
+            ดังนั้น โครงงานนี้จึงสร้างตัวกรอง $E_i(t; \tau_{\text{excl}}, r_{\text{excl}})$ ขึ้นมา: <strong>ถ้าช่องกริดนั้น หรือพื้นที่รอบข้างในรัศมี $r_{\text{excl}}$ (เช่น 10 กม.) เพิ่งมีจุดความร้อนเกิดขึ้นภายในช่วงเวลา $\tau_{\text{excl}}$ (เช่น 24 ชม. ก่อนหน้า) เราจะคัดออก ($E_i = 1$)</strong> และนำเฉพาะช่องกริดที่ยังปลอดไฟ ($E_i = 0$) มาทดสอบพยากรณ์เท่านั้น!
+          </p>
+        </div>
+
+        <div class="quiz-container" id="quiz-1"></div>
+      </section>
+
+      <!-- ==================== STEP 3 ==================== -->
+      <section class="step-section" id="step-2">
+        <span class="lesson-tag">Step 3 / 7 • คณิตศาสตร์ของการวัดความผิดปกติ</span>
+        <h1 class="lesson-title">🌡️ แปลงค่าฝุ่นดิบให้เป็น "สัญญาณความผิดปกติ" ($z_j, a_j$)</h1>
+        <p class="lesson-lead">
+          ทำไมเราถึงเอาตัวเลขค่าฝุ่น $PM_{2.5}$ ดิบๆ (เช่น $60\ \mu\text{g/m}^3$) มาใช้เทียบกันตรงๆ ไม่ได้? และทำไมนักคณิตศาสตร์ถึงเลือกใช้ <strong>Median & MAD</strong> แทนที่จะใช้ค่าเฉลี่ยเลขคณิต (Mean) ที่เราเรียนตอน ม.ต้น? มาดูคำตอบกัน!
+        </p>
+
+        <div class="analogy-box">
+          <div class="analogy-title">⚖️ เปรียบเทียบให้เห็นภาพ: ย่านใจกลางเมือง vs หมู่บ้านบนยอดดอย</div>
+          <p>
+            ลองนึกภาพ <strong>สถานี A (ตัวเมืองใหญ่)</strong> มีรถวิ่งทั้งวัน ค่าฝุ่นปกติอยู่ที่ $50\ \mu\text{g/m}^3$ กับ <strong>สถานี B (ยอดดอยแม่ฮ่องสอน)</strong> อากาศใสสะอาด ค่าฝุ่นปกติอยู่ที่ $12\ \mu\text{g/m}^3$<br><br>
+            ถ้าเช้าวันนี้ ทั้งสองสถานีวัดค่าฝุ่นได้ $45\ \mu\text{g/m}^3$ เท่ากันเป๊ะ!
+            <br>• สำหรับสถานี A: $45$ ถือว่า <strong>"น้อยกว่าปกติ"</strong> (อากาศดีขึ้น)
+            <br>• สำหรับสถานี B บนดอย: จาก $12$ พุ่งมา $45$ ถือว่า <strong>"พุ่งสูงผิดปกติมาก!"</strong> ต้องมีควันลอยมาแน่ๆ!
+            <br><br>นี่คือเหตุผลที่เราต้องแปลงค่าฝุ่นดิบ $p_j(t)$ ให้เป็น <strong>"ค่าความผิดปกติเทียบกับอดีตของตัวเอง" ($z_j(t)$)</strong>
+          </p>
+        </div>
+
+        <h3>🦸‍♂️ ทำไมต้องใช้ Median (มัธยฐาน) และ MAD แทน Mean และ SD?</h3>
+        <p>
+          สมมติเพื่อนในกลุ่ม 5 คน มีเงินติดตัว $[20, 22, 25, 25, 30]$ บาท ค่ากลาง (มัธยฐาน) คือ $25$ บาท วันดีคืนดีเพื่อนคนสุดท้ายถูกหวย มีเงิน $10,000$ บาท!
+          ถ้าเราใช้ <strong>ค่าเฉลี่ย (Mean)</strong> ค่าเฉลี่ยจะกระโดดไปเป็น $2,022$ บาททันที (โดนค่าสุดโต่ง หรือ Outlier ดึงจนเพี้ยน) แต่ถ้าใช้ <strong>มัธยฐาน (Median)</strong> ค่ากลางยังคงเป็น $25$ บาทเหมือนเดิม!
+        </p>
+
+        <div class="math-box">
+          <strong>📐 สมการค่าความผิดปกติของ PM2.5 ประจำสถานี $j$ ณ เวลา $t$:</strong>
+          $$z_j(t) = \frac{p_j(t) - \operatorname{med}_j(t)}{1.4826 \cdot \operatorname{MAD}_j(t) + \varepsilon}$$
+          $$a_j(t) = \max(0, z_j(t))$$
+          <ul style="font-size: 0.92rem; margin-top: 10px; padding-left: 20px;">
+            <li>$p_j(t)$: ค่าฝุ่น $PM_{2.5}$ ปัจจุบันของสถานี $j$</li>
+            <li>$\operatorname{med}_j(t)$: ค่ามัธยฐานของฝุ่นย้อนหลัง (เช่น 14 หรือ 30 วันก่อนเวลา $t$)</li>
+            <li>$\operatorname{MAD}_j(t)$: มัธยฐานของผลต่างสัมบูรณ์ $\operatorname{median}(|p_j(s) - \operatorname{med}_j(t)|)$</li>
+            <li>$1.4826$: ค่าคงที่ทางสถิติที่ปรับให้สเกลของ MAD เทียบเท่ากับส่วนเบี่ยงเบนมาตรฐาน (SD) ในการแจกแจงปกติ</li>
+            <li>$a_j(t) = \max(0, z_j(t))$: เราสนใจเฉพาะตอนที่ฝุ่น <strong>"สูงกว่าปกติ (ค่าบวก)"</strong> ถ้าวันไหนฝุ่นต่ำกว่าปกติ ($z_j < 0$) จะปัดเป็น $0$ ทันที</li>
+          </ul>
+        </div>
+
+        <div class="external-links-box">
+          <div class="external-links-title">🔗 ลิงก์เรียนเสริมภายนอก (เรื่องสถิติที่ทนทานต่อค่ากระโดด)</div>
+          <ul class="ext-link-list">
+            <li class="ext-link-item"><a href="https://www.khanacademy.org/math/statistics-probability/summarizing-quantitative-data/mean-median-basics/a/mean-median-and-mode-review" target="_blank" rel="noopener">📘 Khan Academy: ทบทวน Mean vs Median</a></li>
+            <li class="ext-link-item"><a href="https://en.wikipedia.org/wiki/Median_absolute_deviation" target="_blank" rel="noopener">📐 ทำความรู้จัก MAD และเลข 1.4826</a></li>
+          </ul>
+        </div>
+
+        <div class="quiz-container" id="quiz-2"></div>
+      </section>
+
+      <!-- ==================== STEP 4 ==================== -->
+      <section class="step-section" id="step-3">
+        <span class="lesson-tag">Step 4 / 7 • หัวใจเอกลักษณ์ของโปรเจกต์!</span>
+        <h1 class="lesson-title">🌬️ ถักทอเครือข่าย PM2.5 ด้วย "ระยะทาง" และ "ทิศทางลม" ($\Phi_i$)</h1>
+        <p class="lesson-lead">
+          มาถึงส่วนที่เป็น <strong>พระเอกของโครงงาน</strong> กันแล้ว! แทนที่จะดูสถานีวัดฝุ่นแค่สถานีเดียว เราจะรวมข้อมูลจากหลายสถานีรอบๆ ช่องกริดเป้าหมาย โดยใช้ฟังก์ชันทางคณิตศาสตร์ให้น้ำหนักตาม <strong>ระยะห่าง ($D_{ij}$)</strong> และ <strong>ทิศทางลม ($W_{ij}$)</strong>
+        </p>
+
+        <div class="analogy-box">
+          <div class="analogy-title">🍢 เปรียบเทียบให้เห็นภาพ: ปริศนากลิ่นหมูปิ้งมาจากไหน?</div>
+          <p>
+            สมมติเรายืนตรวจการณ์อยู่ที่ <strong>ช่องกริด $i$</strong> แล้วมีเพื่อนนักสืบ 3 คนยืนดมกลิ่นควันอยู่ที่สถานีวัดฝุ่นรอบๆ ตัวเรา:
+            <br>1. <strong>กฎระยะทาง ($D_{ij}$):</strong> เพื่อนคนที่ยืนอยู่ใกล้เราแค่ $10\text{ กม.}$ ย่อมให้ข้อมูลน่าเชื่อถือกว่าเพื่อนที่อยู่ไกลออกไป $120\text{ กม.}$
+            <br>2. <strong>กฎทิศทางลม ($W_{ij}$):</strong> ถ้าลมพัดจากช่องกริดของเรา <strong>พุ่งตรงไปหาเพื่อนคนที่ 1 (เพื่อนอยู่ใต้ลมของเราพอดี)</strong> แล้วเพื่อนคนที่ 1 ตะโกนบอกว่า <em>"เฮ้ย! ฝุ่นควันพุ่งสูงผิดปกติ!"</em> แปลว่าในช่องกริดของเราอาจกำลังเริ่มมีกิจกรรมเผาไหม้ที่ส่งควันลอยไปหาเพื่อนคนนั้น!
+          </p>
+        </div>
+
+        <div class="math-box">
+          <strong>1️⃣ น้ำหนักตามระยะทาง (Distance Weight $D_{ij}$):</strong>
+          $$D_{ij} = \exp\left(-\frac{d_{ij}}{\ell}\right), \qquad \ell > 0$$
+          <p style="font-size: 0.9rem;">ยิ่งระยะห่าง $d_{ij}$ มาก ค่าน้ำหนักจะค่อยๆ ลดลงแบบเอ็กซ์โพเนนเชียล ตามระยะอ้างอิง $\ell$ (เช่น $\ell = 50\text{ กม.}$)</p>
+          <hr style="margin: 14px 0; border: none; border-top: 1px dashed #CBD5E1;">
+          <strong>2️⃣ น้ำหนักความสอดคล้องกับทิศทางลม (Wind Alignment Weight $W_{ij}(t)$):</strong>
+          $$W_{ij}(t) = \exp\left(\kappa \left[\cos(\theta_{ij} - \psi_i(t)) - 1\right]\right), \qquad \kappa \ge 0$$
+          <p style="font-size: 0.9rem;">
+            เมื่อ $\theta_{ij}$ คือมุมทิศจากช่องกริด $i$ ไปสถานี $j$ และ $\psi_i(t)$ คือทิศที่ลมพัดไป:
+            <br>• ถ้าลมพัดตรงไปทางสถานีพอดี ($\theta_{ij} = \psi_i$) $\implies \cos(0^\circ) = 1 \implies W_{ij} = \exp(0) = 1$ (ได้น้ำหนักเต็ม 100%!)
+            <br>• <strong>ความเจ๋งทางคณิตศาสตร์:</strong> ถ้าเราตั้งค่าความเข้มทิศลม $\kappa = 0$ จะได้ $W_{ij} = 1$ เสมอ สูตรจะยุบตัวกลายเป็นสูตรใช้ระยะทางอย่างเดียวโดยอัตโนมัติ!
+          </p>
+          <hr style="margin: 14px 0; border: none; border-top: 1px dashed #CBD5E1;">
+          <strong>3️⃣ คะแนนเครือข่ายรวม ($\Phi_i(t)$ สำหรับโมเดล $M_{2b}$):</strong>
+          $$\Phi_i(t) = \frac{\sum_{j=1}^{M} q_{ij}(t) a_j(t)}{\sum_{j=1}^{M} q_{ij}(t) + \varepsilon}, \qquad \text{โดยที่ } q_{ij}(t) = D_{ij} \cdot W_{ij}(t)$$
+        </div>
+
+        <!-- Interactive Simulator -->
+        <div class="sandbox-box">
+          <h3 class="cozy-font">🎮 ห้องทดลองจำลอง: ลองหมุนลมและเลื่อนระยะสถานีด้วยตัวเอง!</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">
+            ลองเลื่อนสไลเดอร์ด้านล่างเพื่อดูว่า น้ำหนักระยะทาง ($D_{ij}$), น้ำหนักทิศลม ($W_{ij}$) และน้ำหนักรวม ($q_{ij}$) เปลี่ยนแปลงอย่างไรตามสมการจริงของโปรเจกต์!
+          </p>
+
+          <div class="sandbox-controls">
+            <div class="slider-group">
+              <label><span>📏 ระยะห่างสถานี ($d_{ij}$)</span> <span id="lblDist">25 กม.</span></label>
+              <input type="range" id="simDist" min="0" max="150" value="25" oninput="updateSimulator()">
+              <small style="color: var(--text-muted);">ยิ่งใกล้ น้ำหนัก $D_{ij}$ ยิ่งเข้าใกล้ 1.0</small>
+            </div>
+
+            <div class="slider-group">
+              <label><span>🧭 ความต่างมุมลม ($\theta_{ij} - \psi_i$)</span> <span id="lblAngle">0° (ตรงแนวลมเป๊ะ)</span></label>
+              <input type="range" id="simAngle" min="0" max="180" value="0" oninput="updateSimulator()">
+              <small style="color: var(--text-muted);">0° = สถานีอยู่ใต้ลมพอดี, 180° = สวนทางลม</small>
+            </div>
+
+            <div class="slider-group">
+              <label><span>💨 ความเข้มทิศลม ($\kappa$)</span> <span id="lblKappa">1.0</span></label>
+              <input type="range" id="simKappa" min="0" max="2" step="0.5" value="1.0" oninput="updateSimulator()">
+              <small style="color: var(--text-muted);">ลองปรับเป็น 0 เพื่อดู $W_{ij}$ กลายเป็น 1 เสมอ!</small>
+            </div>
+
+            <div class="slider-group">
+              <label><span>🌫️ ความผิดปกติฝุ่นสถานี ($a_j$)</span> <span id="lblAnomaly">2.50</span></label>
+              <input type="range" id="simAnomaly" min="0" max="5" step="0.1" value="2.5" oninput="updateSimulator()">
+              <small style="color: var(--text-muted);">ระดับความพุ่งของฝุ่นที่สถานีวัดได้</small>
+            </div>
+          </div>
+
+          <div class="sandbox-result">
+            <div class="metric-pill">
+              <div style="font-size: 0.85rem; color: var(--text-muted);">น้ำหนักระยะทาง ($D_{ij}$)</div>
+              <div class="val" id="outD">0.6065</div>
+            </div>
+            <div class="metric-pill">
+              <div style="font-size: 0.85rem; color: var(--text-muted);">น้ำหนักทิศทางลม ($W_{ij}$)</div>
+              <div class="val" id="outW">1.0000</div>
+            </div>
+            <div class="metric-pill">
+              <div style="font-size: 0.85rem; color: var(--text-muted);">น้ำหนักเครือข่ายรวม ($q_{ij} = D_{ij}W_{ij}$)</div>
+              <div class="val" id="outQ" style="color: #2f5e49;">0.6065</div>
+            </div>
+            <div class="metric-pill">
+              <div style="font-size: 0.85rem; color: var(--text-muted);">ผลคูณสัญญาณ ($q_{ij} \cdot a_j$)</div>
+              <div class="val" id="outSignal">1.5163</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="external-links-box">
+          <div class="external-links-title">🔗 ลิงก์เรียนเสริมภายนอก (เข้าใจฟังก์ชัน Cosine และ Exponential)</div>
+          <ul class="ext-link-list">
+            <li class="ext-link-item"><a href="https://www.mathsisfun.com/sine-cosine-tangent.html" target="_blank" rel="noopener">📐 MathsIsFun: เข้าใจมุม Cosine แบบมีภาพประกอบ</a></li>
+            <li class="ext-link-item"><a href="https://en.wikipedia.org/wiki/Haversine_formula" target="_blank" rel="noopener">🌍 สูตร Haversine คำนวณระยะทางบนโลกทรงกลม</a></li>
+          </ul>
+        </div>
+
+        <div class="quiz-container" id="quiz-3"></div>
+      </section>
+
+      <!-- ==================== STEP 5 ==================== -->
+      <section class="step-section" id="step-4">
+        <span class="lesson-tag">Step 5 / 7 • บันได 5 ขั้น & สมการลอจิสติก</span>
+        <h1 class="lesson-title">🪜 ไต่บันได 5 ขั้น ($M_{-1}$ ถึง $M_{2b}$) พิสูจน์สมมติฐานทีละก้าว!</h1>
+        <p class="lesson-lead">
+          เราจะรู้ได้ยังไงว่าความแม่นยำที่เพิ่มขึ้น มาจากฝุ่นสถานีใกล้สุด มาจากการรวมหลายสถานี หรือมาจากทิศทางลม? คำตอบคือเราต้องสร้าง <strong>"ลำดับแบบจำลอง 5 ขั้น (Stepwise Model Hierarchy)"</strong> มาแข่งกันบนสนามสอบเดียวกัน!
+        </p>
+
+        <h3>🧮 แปลงคะแนนรวมให้เป็น "ความน่าจะเป็น 0 ถึง 100%" ด้วย Logistic GLM</h3>
+        <p>
+          เราใช้แบบจำลอง <strong>Generalized Linear Model แบบลอจิสติก (Logistic Regression)</strong> เพราะโปร่งใสเห็นค่าสัมประสิทธิ์ $\beta$ ของทุกตัวแปรชัดเจน:
+        </p>
+        <div class="math-box">
+          $$\pi_i(t) = P\left(Y_i(t; 24\text{h}) = 1 \mid X_i(t)\right) = \frac{1}{1 + \exp(-\eta_i(t))}, \qquad \eta_i(t) = \beta_0 + \beta^\top X_i(t)$$
+          <p style="font-size: 0.9rem; margin-top: 6px;">
+            ฟังก์ชันซิกมอยด์ $\frac{1}{1+\exp(-\eta)}$ ทำหน้าที่บีบค่าผลรวมเชิงเส้น $\eta_i(t)$ ไม่ว่าจะบวกหรือลบมากแค่ไหน ให้กลายเป็น <strong>ค่าความน่าจะเป็น $\pi_i(t)$ ที่อยู่ระหว่าง $0$ ถึง $1$ (หรือ $0\%$ ถึง $100\%$)</strong> เสมอ!
+          </p>
+        </div>
+
+        <h3>🏆 ตารางเปรียบเทียบแบบจำลองทั้ง 5 ขั้น (จากผลการทดลองในโครงงาน)</h3>
+        <table class="cozy-table">
+          <thead>
+            <tr>
+              <th>ระดับโมเดล</th>
+              <th>สิ่งที่ใส่เข้าไปในโมเดล</th>
+              <th>คำถามที่ต้องการพิสูจน์ในขั้นนี้</th>
+              <th>Brier Score ↓<br><small>(ยิ่งต่ำยิ่งแม่น)</small></th>
+              <th>PR-AUC ↑<br><small>(ยิ่งสูงยิ่งเก่ง)</small></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>$M_{-1}$</strong></td>
+              <td>ทายค่าเฉลี่ยคงที่ทุกวัน ($\bar{Y}_{\text{train}} \approx 8.2\%$)</td>
+              <td>เส้นมาตรฐานต่ำสุด (หลับตาทายตามค่าเฉลี่ย)</td>
+              <td>0.07520</td>
+              <td>0.0820</td>
+            </tr>
+            <tr>
+              <td><strong>$M_0$</strong></td>
+              <td>อากาศ + ภูมิประเทศ + พืชพรรณ + ฤดูกาล + ประวัติไฟ $C_i$</td>
+              <td>ใช้แค่ข้อมูลกายภาพและสถิติเดิม ดีขึ้นแค่ไหน? ($M_0$ vs $M_{-1}$)</td>
+              <td>0.05670</td>
+              <td>0.2840</td>
+            </tr>
+            <tr>
+              <td><strong>$M_1$</strong></td>
+              <td>$M_0$ + ค่าความผิดปกติฝุ่น <strong>สถานีที่ใกล้ที่สุดตัวเดียว</strong> ($a_{\text{nearest}}$)</td>
+              <td>ดูฝุ่นแค่สถานีเดียวใกล้ๆ ช่วยให้แม่นขึ้นไหม? ($M_1$ vs $M_0$)</td>
+              <td>0.05120</td>
+              <td>0.3390</td>
+            </tr>
+            <tr>
+              <td><strong>$M_{2a}$</strong></td>
+              <td>$M_0$ + คะแนนเครือข่ายหลายสถานี <strong>ถ่วงตามระยะทาง</strong> ($\Phi_i^{(D)}$)</td>
+              <td>รวมหลายสถานีดีกว่าดูสถานีเดียวไหม? ($M_{2a}$ vs $M_1$)</td>
+              <td>0.04680</td>
+              <td>0.3920</td>
+            </tr>
+            <tr>
+              <td><strong>$M_{2b}$ 🌟</strong></td>
+              <td>$M_0$ + คะแนนเครือข่าย <strong>ถ่วงระยะทาง + ทิศทางลม</strong> ($\Phi_i$)</td>
+              <td>เพิ่มทิศทางลมเข้าไป ช่วยให้ชนะเลิศไหม? ($M_{2b}$ vs $M_{2a}$)</td>
+              <td><strong>0.04180</strong></td>
+              <td><strong>0.4480</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="analogy-box">
+          <div class="analogy-title">🔢 ลองดูตัวอย่างตัวเลขจริงที่ อำเภอปาย–ปางมะผ้า (Cell 28) ในช่วงฤดูเผาไหม้รุนแรง!</div>
+          <p>
+            ในวันที่อากาศร้อน $34.5^\circ\text{C}$ และลมพัดแรง:
+            <br>• ถ้าใช้แค่ <strong>$M_0$ (ไม่ดูฝุ่นเลย)</strong> โมเดลประเมินโอกาสเกิดจุดความร้อนไว้ที่ <strong>$39.7\%$</strong>
+            <br>• พอเพิ่มฝุ่นสถานีใกล้สุด (<strong>$M_1$</strong>) โอกาสขยับเป็น <strong>$67.9\%$</strong>
+            <br>• พอรวมเครือข่ายหลายสถานีตามระยะทาง (<strong>$M_{2a}$</strong>) โอกาสขยับเป็น <strong>$72.7\%$</strong>
+            <br>• และพอใส่ <strong>ทิศทางลม ($M_{2b}$)</strong> เข้าไป โอกาสพุ่งขึ้นเป็น <strong>$86.7\%$</strong>! ซึ่งในวันรุ่งขึ้น ดาวเทียม VIIRS ก็ตรวจพบจุดความร้อนเกิดขึ้นจริงในช่องกริดนี้ ($Y_i = 1$)
+          </p>
+        </div>
+
+        <div class="quiz-container" id="quiz-4"></div>
+      </section>
+
+      <!-- ==================== STEP 6 ==================== -->
+      <section class="step-section" id="step-5">
+        <span class="lesson-tag">Step 6 / 7 • การตรวจสอบความถูกต้องระดับงานวิจัย</span>
+        <h1 class="lesson-title">🔒 พิธีสารป้องกัน Data Leakage & ทำไมห้ามวัดผลด้วย Accuracy!</h1>
+        <p class="lesson-lead">
+          จุดที่ทำให้กรรมการประกวดโครงงานวิทยาศาสตร์ประทับใจที่สุดในโครงงานนี้ คือ <strong>"ความซื่อสัตย์และรัดกุมทางสถิติ"</strong> เรามาดูกันว่าทำไมเราห้ามสุ่มข้อมูลข้ามเวลา และทำไมถึงต้องมีพิธี "ล็อกแบบจำลอง (Model Lock)"!
+        </p>
+
+        <div class="concept-card-grid">
+          <div class="concept-card">
+            <div class="concept-icon">⏳</div>
+            <h4 class="cozy-font">1. Rolling-Origin Backtesting</h4>
+            <p style="font-size: 0.88rem;">
+              <strong>ห้ามสุ่มข้อมูลข้ามวัน (No Random K-Fold)!</strong> เพราะอากาศเมื่อวานกับพรุ่งนี้คล้ายกัน ถ้าเอาพรุ่งนี้มาสอนเพื่อทายเมื่อวาน เท่ากับแอบดูอนาคต เราจึงต้องฝึกจากอดีตแล้วเลื่อนเวลาไปข้างหน้า 3 รอบ (Fold A, B, C)
+            </p>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">🔐</div>
+            <h4 class="cozy-font">2. Model Lock & Final Test</h4>
+            <p style="font-size: 0.88rem;">
+              ก่อนเปิดข้อสอบชุดสุดท้าย (Final Locked Test) เราต้องเขียนเอกสารล็อกสูตรและค่าพารามิเตอร์ทุกตัว ($\ell, \kappa, R_{\max}$) แล้วเปิดสอบ <strong>แค่ครั้งเดียว!</strong> ห้ามแอบกลับมาแก้สูตรหลังเห็นคะแนนเด็ดขาด
+            </p>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">🚫</div>
+            <h4 class="cozy-font">3. ทำไมห้ามใช้ Accuracy?</h4>
+            <p style="font-size: 0.88rem;">
+              ในแต่ละวันมีช่องกริดที่เกิดไฟแค่ $\sim 8\%$ (ไม่เกิดไฟ $92\%$) ถ้าเราสร้างโมเดลขี้เกียจที่ตะโกนว่า <em>"ไม่เกิดไฟเลยทุกวัน!"</em> โมเดลนั้นจะได้ Accuracy สูงถึง $92\%$ ทันทีแต่ไร้ประโยชน์!
+            </p>
+          </div>
+        </div>
+
+        <div class="math-box">
+          <strong>🎯 ตัวชี้วัดความน่าจะเป็นที่ถูกต้อง (Proper Probabilistic Metrics):</strong>
+          <ul style="font-size: 0.92rem; margin-top: 8px; padding-left: 20px;">
+            <li><strong>Brier Score ($\text{BS} = \frac{1}{N}\sum (\pi_k - Y_k)^2$):</strong> วัดความคลาดเคลื่อนกำลังสองระหว่างโอกาสที่ทาย ($\pi_k$) กับความจริง ($Y_k \in \{0,1\}$) <strong>ยิ่งเข้าใกล้ 0 ยิ่งแม่นยำ!</strong></li>
+            <li><strong>PR-AUC (Precision-Recall AUC):</strong> วัดฝีมือการจับเหตุการณ์ที่เกิดน้อย (Imbalanced Data) <strong>ยิ่งสูงยิ่งเก่ง!</strong></li>
+            <li><strong>Reliability Diagram (Calibration Curve):</strong> ตรวจว่าถ้าโมเดลทายโอกาส $30\%$ อยู่ 100 ครั้ง ในความจริงเกิดเหตุการณ์ขึ้นใกล้เคียง $30$ ครั้งจริงไหม</li>
+            <li><strong>Paired Time-Block Bootstrap (95% CI):</strong> สุ่มบล็อกเวลาซ้ำ $1,000$ รอบ เพื่อยืนยันว่า $M_{2b}$ ชนะ $M_{2a}$ อย่างมีนัยสำคัญทางสถิติ ไม่ใช่เพราะฟลุค!</li>
+          </ul>
+        </div>
+
+        <h3>🔬 เกณฑ์วินิจฉัย 5 สถานการณ์ (Scenario A – E): ผลออกมายังไงก็เป็นวิทยาศาสตร์!</h3>
+        <p>
+          โครงงานที่ดีต้องไม่บังคับผลลัพธ์ เราเตรียมคำอธิบายไว้ล่วงหน้า 5 กรณี:
+          <br>• <strong>Scenario A:</strong> $M_{2b} > M_{2a} > M_1 > M_0$ ชัดเจน $\implies$ ทั้งเครือข่ายฝุ่นและทิศทางลมช่วยพยากรณ์ได้จริง!
+          <br>• <strong>Scenario B:</strong> $M_{2a} > M_1 > M_0$ แต่ $M_{2b} \approx M_{2a}$ $\implies$ รวมหลายสถานีช่วยได้ แต่ลมเฉลี่ยในหุบเขาอาจแปรปรวนจนไม่เพิ่มคะแนน
+          <br>• <strong>Scenario E:</strong> แม่นเฉพาะทายล่วงหน้าสั้นๆ (6 ชม.) แต่หายไปเมื่อตัดไฟรอบข้างเข้มข้นขึ้น $\implies$ สัญญาณฝุ่นนั้นคือ <strong>"ควันของไฟที่เพิ่งเริ่มติดแต่ดาวเทียมยังไม่เห็น"</strong> ไม่ใช่การพยากรณ์ล่วงหน้าข้ามวัน
+        </p>
+
+        <div class="quiz-container" id="quiz-5"></div>
+      </section>
+
+      <!-- ==================== STEP 7 ==================== -->
+      <section class="step-section" id="step-6">
+        <span class="lesson-tag">Step 7 / 7 • บทสรุปเจ้าของโปรเจกต์ & เชื่อมต่อ Webapp จริง!</span>
+        <h1 class="lesson-title">🎓 คุณเข้าใจโปรเจกต์นี้ครบ 100% เสมือนเป็นเจ้าของโครงงานแล้ว!</h1>
+        <p class="lesson-lead">
+          ยินดีด้วยครับ! ตอนนี้คุณเข้าใจตั้งแต่ปัญหาหมอกควันแม่ฮ่องสอน สมการ Median/MAD สมการถ่วงน้ำหนักระยะทางและทิศทางลม ($\Phi_i$) บันได 5 ขั้น ไปจนถึงระเบียบวิธีป้องกัน Data Leakage แล้ว มาซ้อมตอบคำถามกรรมการและไปสำรวจ Webapp จริงกันเลย!
+        </p>
+
+        <h3>🎤 คัมภีร์ซ้อมตอบคำถามกรรมการ YSC (คลิกเพื่อดูแนวทางตอบแบบมืออาชีพ)</h3>
+        <div class="qa-list">
+          <div class="qa-item open">
+            <button class="qa-question" onclick="toggleQA(this)">
+              <span>❓ คำถามที่ 1: "ทำไมไม่ใช้ Deep Learning หรือ XGBoost ไปเลย น่าจะแม่นกว่า Logistic GLM ไหม?"</span>
+              <span>▼</span>
+            </button>
+            <div class="qa-answer">
+              <strong>แนวทางตอบอย่างมั่นใจ:</strong> "เป้าหมายหลักของโครงงานในสาขาคณิตศาสตร์และสถิติ คือการ <strong>ทดสอบสมมติฐานและแยกบทบาทของตัวแปรอย่างเป็นระบบ (Variable Attribution)</strong> ค่ะ หากใช้โมเดลกล่องดำ เราจะไม่ทราบเลยว่าความแม่นยำที่เพิ่มขึ้นมาจากระยะทาง ทิศทางลม หรือสภาพอากาศ การใช้ Logistic GLM คู่กับลำดับขั้นบันได $M_{-1} \to M_{2b}$ ทำให้เราพิสูจน์คุณค่าของสมการเครือข่าย $\Phi_i(t)$ ได้อย่างโปร่งใสและตรวจสอบค่าสัมประสิทธิ์ได้ทุกตัวค่ะ"
+            </div>
+          </div>
+
+          <div class="qa-item">
+            <button class="qa-question" onclick="toggleQA(this)">
+              <span>❓ คำถามที่ 2: "ฝุ่น PM2.5 เกิดจากไฟ แล้วจะเอาฝุ่นมาพยากรณ์ไฟในอนาคตได้อย่างไร?"</span>
+              <span>▼</span>
+            </button>
+            <div class="qa-answer">
+              <strong>แนวทางตอบอย่างมั่นใจ:</strong> "เราไม่ได้เคลมว่าฝุ่นเป็นสาเหตุที่ทำให้เกิดไฟค่ะ แต่ในทางสถิติ ฝุ่นที่สูงผิดปกติตามแนวลมทำหน้าที่เป็น <strong>ตัวชี้วัดสภาพแวดล้อม (Proxy)</strong> เช่น การเริ่มเผาขนาดเล็กใต้เรือนยอดไม้ที่ดาวเทียมยังตรวจไม่พบ หรือการสะสมตัวของมวลอากาศแห้ง และที่สำคัญ เรามีตัวกรอง <strong>Spatiotemporal Exclusion ($E_i = 0$)</strong> ตัดพื้นที่ที่มีไฟไหม้อยู่ก่อนแล้วออก เพื่อพิสูจน์ว่าไม่ได้เป็นการจับควันของไฟเก่าค่ะ"
+            </div>
+          </div>
+
+          <div class="qa-item">
+            <button class="qa-question" onclick="toggleQA(this)">
+              <span>❓ คำถามที่ 3: "Webapp ที่สร้างขึ้นมานี้ เอาไว้ใช้สั่งการดับไฟป่าจริงได้เลยใช่ไหม?"</span>
+              <span>▼</span>
+            </button>
+            <div class="qa-answer">
+              <strong>แนวทางตอบอย่างมั่นใจ:</strong> "ไม่ใช่ค่ะ Webapp ของเราออกแบบมาเป็น <strong>Interactive Mathematical Experiment Explorer (ห้องทดลองย้อนดูการทดลองทางคณิตศาสตร์)</strong> เพื่อให้ผู้วิจัยและกรรมการสามารถคลิกดูช่องกริด ตรวจสอบสมการถ่วงน้ำหนักเส้นโครงข่าย $q_{ij}$ และเปรียบเทียบผลของโมเดล $M_{-1}$ ถึง $M_{2b}$ กับจุดความร้อนจริงจากดาวเทียมได้อย่างโปร่งใส ไม่ใช่ระบบเตือนภัยปฏิบัติการจริงของภาครัฐค่ะ"
+            </div>
+          </div>
+        </div>
+
+        <!-- Guide to Real Webapp -->
+        <h3 style="margin-top: 28px;">🧭 คู่มือนำเที่ยว: เมื่อกดเข้าสู่ Webapp จริง คุณจะได้เจอกับ 5 แท็บหลักนี้!</h3>
+        <div class="concept-card-grid">
+          <div class="concept-card">
+            <div class="concept-icon">🗺️</div>
+            <h4 class="cozy-font">แท็บ 1: แผนที่ดาวเทียม</h4>
+            <p style="font-size: 0.86rem;">คลิกที่ช่องกริดใดก็ได้เพื่อเปิด <strong>Cell Inspector</strong> ดูการคำนวณสมการสดๆ พร้อมเส้นเชื่อมเครือข่ายสถานีและลูกศรลม!</p>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">📊</div>
+            <h4 class="cozy-font">แท็บ 2: เปรียบเทียบ 5 โมเดล</h4>
+            <p style="font-size: 0.86rem;">ดูกราฟ Calibration Curve, PR-Curve และกราฟ Bootstrap 95% CI เปรียบเทียบ $M_{-1}$ ถึง $M_{2b}$</p>
+          </div>
+          <div class="concept-card">
+            <div class="concept-icon">📐</div>
+            <h4 class="cozy-font">แท็บ 3–5: สมการ & วิธีวิจัย</h4>
+            <p style="font-size: 0.86rem;">ปรับค่าพารามิเตอร์ $\ell, \kappa, R_{\max}$ ดูตารางเกณฑ์วินิจฉัย Scenario A–E และคลังข้อมูลอ้างอิง Open Data</p>
+          </div>
+        </div>
+
+        <div class="quiz-container" id="quiz-6"></div>
+
+        <!-- Final Launch Portal -->
+        <div class="launch-portal">
+          <div style="font-size: 3rem;">🏆🌲🛰️</div>
+          <h2 class="cozy-font" style="font-size: 1.7rem; margin-top: 8px;">พร้อมลุยสนามจริงแล้ว!</h2>
+          <p style="max-width: 680px; margin: 10px auto; color: var(--text-main);">
+            ตอนนี้คุณมีความรู้ครบทุกสมการและเข้าใจเหตุผลเบื้องหลังทุกส่วนของโครงงาน <strong>YSC 2027</strong> แล้ว ลองกดปุ่มด้านล่างเพื่อเข้าสู่ <strong>Webapp ต้นแบบของจริง</strong> แล้วลองคลิกเล่นแผนที่ดาวเทียมและ Cell Inspector ได้เลย!
+          </p>
+          <a href="https://coolnut-academy.github.io/YSC-PM2.5Graph-Signal-Processing/" target="_blank" rel="noopener" class="launch-btn-giant">
+            🚀 เข้าสู่เว็บไซต์โปรเจกต์จริง (YSC PM2.5 Webapp)
+          </a>
+        </div>
+      </section>
+
+      <!-- Bottom Prev/Next Navigation -->
+      <div class="lesson-footer-nav">
+        <button class="btn-cozy btn-outline" id="btnPrev" onclick="changeStep(-1)">⬅️ บทก่อนหน้า</button>
+        <span class="cozy-font" id="stepIndicatorBottom" style="font-weight: 700; color: var(--text-muted);">Step 1 / 7</span>
+        <button class="btn-cozy btn-primary" id="btnNext" onclick="changeStep(1)">บทถัดไป ➡️</button>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ข้อมูลบทเรียนและแบบฝึกหัดทั้ง 7 Steps
+    const STEPS_DATA = [
+      {
+        title: "1. รู้จักโปรเจกต์ & ปัญหา",
+        desc: "ทำไมต้องคณิตศาสตร์ + จุดความร้อน",
+        questions: [
+          {
+            q: "ข้อใดคือเป้าหมายหลักที่แท้จริงของโครงงานนี้?",
+            options: [
+              "การประดิษฐ์เครื่องเซนเซอร์วัดฝุ่น PM2.5 ราคาประหยัดไปติดในป่า",
+              "การสร้างแบบจำลองคณิตศาสตร์และสถิติที่โปร่งใส เพื่อทดสอบว่าเครือข่าย PM2.5 และทิศทางลมช่วยเพิ่มความแม่นยำในการประมาณโอกาสพบจุดความร้อนล่วงหน้า 24 ชม. หรือไม่",
+              "การแข่งทำโมเดล Deep Learning กล่องดำให้ได้ค่า Accuracy 100%",
+              "การสร้างระบบสั่งการรถดับเพลิงอัตโนมัติแทนหน่วยงานรัฐ"
+            ],
+            answer: 1,
+            explain: "ถูกต้องเลย! โครงงานนี้เน้นสร้างสมการคณิตศาสตร์และสถิติที่โปร่งใส (White-box Mathematical Modeling) เพื่อพิสูจน์สมมติฐานทีละขั้นโดยไม่พึ่งกล่องดำ"
+          },
+          {
+            q: "ข้อมูล 'คำตอบอ้างอิง (Ground Truth)' ที่เราใช้ตรวจว่ามีจุดความร้อนเกิดขึ้นหรือไม่ มาจากแหล่งใด?",
+            options: [
+              "การเดินสำรวจป่าด้วยตัวเองทุกวัน",
+              "ข้อมูลจุดความร้อน Active Fire จากดาวเทียม NASA FIRMS / VIIRS ความละเอียด 375 เมตร",
+              "ข่าวพยากรณ์อากาศทางโทรทัศน์",
+              "กล้องวงจรปิดตามสี่แยกไฟแดง"
+            ],
+            answer: 1,
+            explain: "เก่งมาก! เราใช้ข้อมูลเปิดจากดาวเทียม NASA FIRMS / VIIRS I-Band 375m ในช่วงเวลา (t, t+24h] เป็นตัวแปรผลลัพธ์ Y_i"
+          }
+        ]
+      },
+      {
+        title: "2. วัตถุดิบข้อมูล & กฎห้ามโกง",
+        desc: "โมเดลฐาน M0 & การตัดไฟเดิม (Ei)",
+        questions: [
+          {
+            q: "ทำไมเราต้องใส่ตัวแปรแนวโน้มการเกิดจุดความร้อนในอดีต (C_i) เข้าไปในแบบจำลองฐาน M0 ก่อนจะเริ่มทดสอบฝุ่น PM2.5?",
+            options: [
+              "เพื่อให้สมการดูยาวและยากขึ้น",
+              "เพื่อควบคุมความเสี่ยงพื้นฐานของแต่ละพื้นที่ (เพราะบางพื้นที่เกิดไฟซ้ำซากทุกปีอยู่แล้ว) จะได้รู้ว่า PM2.5 ให้ข้อมูลเพิ่มขึ้นมาจริงๆ หรือไม่",
+              "เพื่อแอบเอาคำตอบในอนาคตมาใส่ไว้ล่วงหน้า",
+              "เพื่อใช้คำนวณความเร็วลม"
+            ],
+            answer: 1,
+            explain: "สุดยอด! การใส่ C_i (คำนวณเฉพาะจากชุดฝึกในอดีต) ช่วยป้องกันตัวแปรกวน ทำให้มั่นใจได้ว่าถ้าโมเดลเก่งขึ้นในขั้นถัดไป มันเก่งขึ้นเพราะสัญญาณ PM2.5 จริงๆ"
+          },
+          {
+            q: "เกณฑ์ Spatiotemporal Exclusion (E_i = 0) มีไว้เพื่อแก้ปัญหาอะไร?",
+            options: [
+              "ตัดสถานีวัดฝุ่นที่อยู่ใกล้ทะเลออก",
+              "แยก 'การพยากรณ์ก่อนเกิดเหตุ' ออกจาก 'การตรวจพบควันของไฟที่กำลังลุกไหม้อยู่แล้วในพื้นที่หรือข้างเคียง'",
+              "ตัดวันที่ฝนตกหนักออกจากการคำนวณ",
+              "ลดจำนวนช่องกริดให้เหลือน้อยที่สุด"
+            ],
+            answer: 1,
+            explain: "ถูกต้องครับ! ถ้ามีไฟไหม้อยู่ก่อนแล้วภายในเวลา τ_excl หรือรัศมี r_excl ควันย่อมลอยเข้าสถานีแน่นอน เราจึงต้องตัดออกเพื่อให้เป็นการทดสอบพยากรณ์เหตุการณ์ใหม่จริงๆ"
+          }
+        ]
+      },
+      {
+        title: "3. สัญญาณความผิดปกติ (zj, aj)",
+        desc: "ทำไมต้องใช้ Median และ MAD",
+        questions: [
+          {
+            q: "ทำไมโครงงานนี้ถึงใช้ค่ามัธยฐาน (Median) และ MAD แทนการใช้ค่าเฉลี่ย (Mean) และส่วนเบี่ยงเบนมาตรฐาน (SD) ในการหาระดับฝุ่นปกติของสถานี?",
+            options: [
+              "เพราะคำนวณด้วยมือได้เร็วกว่า",
+              "เพราะข้อมูลฝุ่น PM2.5 มักมีวันที่ค่าพุ่งกระโดดผิดปกติ (Outliers) การใช้ Median และ MAD จะทนทานต่อค่ากระโดด ไม่ทำให้ค่าฐานความปกติเพี้ยน",
+              "เพราะค่าเฉลี่ยใช้ได้เฉพาะกับอุณหภูมิเท่านั้น",
+              "เพราะกรมควบคุมมลพิษบังคับให้ใช้"
+            ],
+            answer: 1,
+            explain: "แม่นยำมาก! Median และ MAD เป็นสถิติที่ทนทาน (Robust Statistics) ต่อค่ากระโดดสุดโต่ง ทำให้เกณฑ์วัดความผิดปกติของแต่ละสถานีเสถียรเสมอ"
+          },
+          {
+            q: "จากสมการ a_j(t) = max(0, z_j(t)) ถ้าเช้าวันนี้สถานีวัดฝุ่นได้ต่ำกว่าค่าปกติในอดีต (เช่น z_j(t) = -1.5) ค่า a_j(t) จะเท่ากับเท่าไร?",
+            options: [
+              "-1.5",
+              "0",
+              "1.5",
+              "1.4826"
+            ],
+            answer: 1,
+            explain: "ถูกต้องเลย! เพราะเราสนใจสัญญาณควันหรือฝุ่นที่ 'สูงผิดปกติ (Positive Anomaly)' เมื่อ z_j ติดลบ ฟังก์ชัน max(0, -1.5) จึงปัดให้เป็น 0"
+          }
+        ]
+      },
+      {
+        title: "4. เครือข่ายระยะทาง & ลม (Φi)",
+        desc: "สมการ Dij, Wij + ห้องทดลอง",
+        questions: [
+          {
+            q: "ในสมการน้ำหนักทิศทางลม W_ij(t) = exp(κ[cos(θ_ij - ψ_i(t)) - 1]) ถ้าเราตั้งค่าพารามิเตอร์ความเข้มทิศลม κ = 0 จะเกิดอะไรขึ้น?",
+            options: [
+              "ค่าน้ำหนัก W_ij(t) จะกลายเป็น 0 ทันที ทำให้คำนวณต่อไม่ได้",
+              "ค่าน้ำหนัก W_ij(t) จะมีค่าเท่ากับ 1 เสมอทุกทิศทาง ทำให้สูตรคะแนนเครือข่าย Φ_i(t) ลดรูปกลับไปเป็นสูตรที่ถ่วงตามระยะทางอย่างเดียว (Φ_i^(D))",
+              "ลมพายุจะแรงขึ้น 2 เท่า",
+              "ระยะทางระหว่างสถานีจะกลายเป็น 0 กม."
+            ],
+            answer: 1,
+            explain: "เก่งมากๆ! เพราะ exp(0) = 1 เสมอ นี่คือความสวยงามทางคณิตศาสตร์ที่ทำให้โมเดล M2a (κ=0) เป็นกรณีพิเศษของ M2b (κ>0) เพื่อใช้พิสูจน์บทบาทของทิศทางลมได้โดยตรง!"
+          },
+          {
+            q: "สถานีวัดฝุ่น j ในข้อใด จะได้รับค่าน้ำหนักรวม q_ij = D_ij * W_ij สูงที่สุด?",
+            options: [
+              "สถานีที่อยู่ไกล 140 กม. และอยู่ทิศสวนทางลม",
+              "สถานีที่อยู่ใกล้ช่องกริดเป้าหมาย และอยู่ในแนวทิศใต้ลมที่ลมพัดจากช่องกริดพุ่งตรงไปหาพอดี (θ_ij ≈ ψ_i)",
+              "สถานีที่อยู่ใกล้แต่ลมพัดไปทิศตรงกันข้าม (ทำมุม 180 องศา)",
+              "ทุกสถานีได้น้ำหนักเท่ากันหมด"
+            ],
+            answer: 1,
+            explain: "ถูกต้องครับ! ยิ่งใกล้ D_ij ยิ่งใกล้ 1 และยิ่งอยู่ตรงแนวใต้ลม (มุมต่างใกล้ 0 องศา) cos(0)=1 ทำให้ W_ij ใกล้ 1 น้ำหนักรวม q_ij จึงสูงที่สุด"
+          }
+        ]
+      },
+      {
+        title: "5. ไต่บันไดโมเดล 5 ขั้น",
+        desc: "เปรียบเทียบ M-1 ถึง M2b",
+        questions: [
+          {
+            q: "ถ้าเราต้องการพิสูจน์ว่า 'การรวมข้อมูลฝุ่นจากหลายสถานีตามระยะทาง ดีกว่าการดูแค่สถานีที่ใกล้ที่สุดเพียงสถานีเดียวหรือไม่' เราต้องเปรียบเทียบโมเดลคู่ใด?",
+            options: [
+              "เปรียบเทียบ M0 กับ M-1",
+              "เปรียบเทียบ M1 กับ M0",
+              "เปรียบเทียบ M2a กับ M1",
+              "เปรียบเทียบ M2b กับ M2a"
+            ],
+            answer: 2,
+            explain: "เยี่ยมมาก! M1 คือใช้สถานีใกล้สุดตัวเดียว ส่วน M2a คือรวมหลายสถานีด้วยระยะทาง การเทียบ M2a กับ M1 จึงตอบคำถามนี้ได้ตรงจุดที่สุด"
+          },
+          {
+            q: "ในการประเมินด้วยค่า Brier Score (BS) และ PR-AUC ข้อใดแปลผลได้ถูกต้อง?",
+            options: [
+              "Brier Score ยิ่งสูงยิ่งดี และ PR-AUC ยิ่งต่ำยิ่งดี",
+              "Brier Score ยิ่งต่ำยิ่งแม่นยำ (ความคลาดเคลื่อนน้อย) และ PR-AUC ยิ่งสูงยิ่งจำแนกเก่ง",
+              "ทั้งสองค่าต้องเท่ากับ 1.0 เสมอถึงจะผ่านเกณฑ์",
+              "ดูแค่ค่า Accuracy อย่างเดียวก็เพียงพอแล้ว"
+            ],
+            answer: 1,
+            explain: "ถูกต้องเลย! ในผลการทดลองของโปรเจกต์ M2b ได้ Brier Score ต่ำสุดที่ 0.04180 และได้ PR-AUC สูงสุดที่ 0.4480"
+          }
+        ]
+      },
+      {
+        title: "6. ป้องกัน Data Leakage",
+        desc: "Backtesting & Model Lock",
+        questions: [
+          {
+            q: "ทำไมการแบ่งข้อมูลฝึกและทดสอบในโครงงานนี้ จึงห้ามใช้วิธีสุ่มคละวัน (Random K-Fold Cross Validation)?",
+            options: [
+              "เพราะคอมพิวเตอร์สุ่มเลขไม่เก่ง",
+              "เพราะข้อมูลอากาศและฝุ่นมีความต่อเนื่องตามเวลา หากสุ่มคละวัน ข้อมูลในอนาคตจะรั่วไหลไปอยู่ในชุดฝึก (Data Leakage) เหมือนแอบดูข้อสอบล่วงหน้า",
+              "เพราะจำนวนวันใน 1 ปีมีไม่ครบ 1,000 วัน",
+              "เพราะดาวเทียมโคจรเฉพาะวันจันทร์ถึงศุกร์"
+            ],
+            answer: 1,
+            explain: "ถูกต้องที่สุด! เราจึงต้องใช้ Rolling-Origin Backtesting ที่ใช้เฉพาะข้อมูลในอดีตฝึก เพื่อทำนายอนาคตตามลำดับเวลาจริงเท่านั้น"
+          },
+          {
+            q: "สมมติว่าเมื่อทดสอบจริงแล้วพบว่า ประโยชน์ของ PM2.5 มีเฉพาะการทายล่วงหน้าสั้นๆ (6 ชม.) และหายไปเมื่อตัดไฟรอบข้างเข้มข้นขึ้น (ตรงกับ Scenario E) เราควรทำอย่างไร?",
+            options: [
+              "แอบแก้ตัวเลขในตารางให้ M2b ชนะเหมือนเดิม",
+              "รายงานตามความจริงอย่างเป็นวิทยาศาสตร์ และตีความว่าสัญญาณ PM2.5 นั้นสะท้อนควันของไฟระยะเริ่มต้นที่เพิ่งติด มากกว่าการพยากรณ์ล่วงหน้าข้ามวัน",
+              "ยกเลิกโครงงานทันทีเพราะถือว่าล้มเหลว",
+              "ลบข้อมูลวันที่ทายผิดออกทั้งหมด"
+            ],
+            answer: 1,
+            explain: "ยอดเยี่ยมมาก! ในทางวิทยาศาสตร์ ทุกผลลัพธ์จาก Scenario A ถึง E ล้วนเป็นข้อค้นพบที่มีคุณค่าเมื่อเราตรวจสอบอย่างซื่อสัตย์และรายงานตามจริง"
+          }
+        ]
+      },
+      {
+        title: "7. ซ้อมตอบกรรมการ & สู่เว็บจริง",
+        desc: "คัมภีร์ Q&A & เปิด Webapp PoC",
+        questions: [
+          {
+            q: "เมื่อกรรมการถามว่า 'ทำไมไม่ใช้คำว่าพยากรณ์การเกิดไฟป่าตรงๆ แต่ใช้คำว่าการพบจุดความร้อนจากไฟที่ดาวเทียมตรวจพบ (Active-Fire Hotspots)?' คุณจะตอบอย่างไร?",
+            options: [
+              "เพราะชื่อยาวๆ ดูเท่กว่า",
+              "เพราะข้อมูลคำตอบจากดาวเทียม VIIRS ตรวจจับความผิดปกติทางความร้อน ซึ่งอาจรวมการเผาพื้นที่เกษตรหรือความร้อนอื่น ไม่ได้จำแนกขอบเขตไฟป่าภาคสนาม 100% เราจึงนิยามให้ตรงกับสิ่งที่ข้อมูลวัดได้จริง",
+              "เพราะดาวเทียมมองไม่เห็นต้นไม้",
+              "เพราะไม่อยากให้เกี่ยวข้องกับป่าไม้"
+            ],
+            answer: 1,
+            explain: "ตอบได้เหมือนเจ้าของโปรเจกต์ตัวจริงเลยครับ! นี่คือความรัดกุมของขอบเขตการกล่าวอ้าง (Scope & Scientific Claims) ที่ระบุไว้ใน Blueprint และข้อเสนอโครงงาน"
+          },
+          {
+            q: "ตอนนี้คุณพร้อมที่จะเข้าไปสำรวจแผนที่ดาวเทียมและ Cell Inspector ใน Webapp ต้นแบบของจริงหรือยัง?",
+            options: [
+              "พร้อมมาก! เข้าใจทั้งที่มา สมการคณิตศาสตร์ และวิธีอ่านกราฟครบถ้วนแล้ว ลุยเลย!",
+              "พร้อมสุดๆ อยากไปลองกดปรับค่าพารามิเตอร์ในเว็บจริงแล้ว!"
+            ],
+            answer: 0,
+            anyCorrect: true,
+            explain: "เย้! ยินดีด้วยครับ คุณผ่านหลักสูตร Cozy Math & Fire Lab ครบทั้ง 7 บทเรียนแล้ว กดปุ่มเข้าสู่เว็บไซต์โปรเจกต์จริงด้านล่างได้เลย!"
+          }
+        ]
+      }
+    ];
+
+    let currentStep = 0;
+    let completedSteps = JSON.parse(localStorage.getItem('ysc_cozy_completed') || '{}');
+    let answeredQuestions = JSON.parse(localStorage.getItem('ysc_cozy_answers') || '{}');
+
+    function initApp() {
+      renderSidebar();
+      renderAllQuizzes();
+      updateProgressUI();
+      updateSimulator();
+      goToStep(0);
+
+      // Render math equations when KaTeX loads
+      window.addEventListener('load', () => {
+        if (window.renderMathInElement) {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false}
+            ]
+          });
+        }
+      });
+    }
+
+    function renderSidebar() {
+      const listEl = document.getElementById('stepListNav');
+      listEl.innerHTML = '';
+      STEPS_DATA.forEach((step, idx) => {
+        const isDone = completedSteps[idx];
+        const li = document.createElement('li');
+        li.className = `step-item ${idx === currentStep ? 'active' : ''} ${isDone ? 'completed' : ''}`;
+        li.onclick = () => goToStep(idx);
+        li.innerHTML = `
+          <div class="step-badge">${isDone ? '✓' : idx + 1}</div>
+          <div class="step-info">
+            <div class="step-title">${step.title}</div>
+            <div class="step-desc">${step.desc}</div>
+          </div>
+        `;
+        listEl.appendChild(li);
+      });
+    }
+
+    function renderAllQuizzes() {
+      STEPS_DATA.forEach((step, sIdx) => {
+        const container = document.getElementById(`quiz-${sIdx}`);
+        if (!container) return;
+
+        let html = `
+          <div class="quiz-header">
+            <h3 class="cozy-font" style="color: var(--primary-coral);">✍️ แบบฝึกหัดเช็กความเข้าใจประจำบทที่ ${sIdx + 1}</h3>
+            <span class="lesson-tag" id="quiz-badge-${sIdx}">ตอบให้ครบทั้ง 2 ข้อเพื่อผ่านบทนี้</span>
+          </div>
+        `;
+
+        step.questions.forEach((qObj, qIdx) => {
+          const key = `${sIdx}_${qIdx}`;
+          const savedAns = answeredQuestions[key];
+
+          html += `
+            <div class="quiz-question-card">
+              <div class="quiz-q-title">ข้อที่ ${qIdx + 1}: ${qObj.q}</div>
+              <div class="quiz-options" id="opts-${key}">
+                ${qObj.options.map((optText, oIdx) => {
+                  let btnClass = 'quiz-option-btn';
+                  if (savedAns !== undefined) {
+                    const isCorrect = qObj.anyCorrect || (oIdx === qObj.answer);
+                    if (oIdx === savedAns) {
+                      btnClass += isCorrect ? ' correct' : ' wrong';
+                    } else if (isCorrect) {
+                      btnClass += ' correct';
+                    }
+                  }
+                  return `<button class="${btnClass}" onclick="selectAnswer(${sIdx},${qIdx}, ${oIdx})">${optText}</button>`;
+                }).join('')}
+              </div>
+              <div class="quiz-feedback ${savedAns !== undefined ? 'show ok' : ''}" id="fb-${key}">
+                ${savedAns !== undefined ? `✅ <strong>เฉลย:</strong> ${qObj.explain}` : ''}
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      });
+    }
+
+    function selectAnswer(sIdx, qIdx, oIdx) {
+      const qObj = STEPS_DATA[sIdx].questions[qIdx];
+      const key = `${sIdx}_${qIdx}`;
+      const isCorrect = qObj.anyCorrect || (oIdx === qObj.answer);
+
+      answeredQuestions[key] = oIdx;
+      localStorage.setItem('ysc_cozy_answers', JSON.stringify(answeredQuestions));
+
+      const optsContainer = document.getElementById(`opts-${key}`);
+      const buttons = optsContainer.querySelectorAll('.quiz-option-btn');
+      buttons.forEach((btn, idx) => {
+        btn.classList.remove('correct', 'wrong');
+        if (idx === oIdx) {
+          btn.classList.add(isCorrect ? 'correct' : 'wrong');
+        } else if (qObj.anyCorrect || idx === qObj.answer) {
+          if (!isCorrect) btn.classList.add('correct');
+        }
+      });
+
+      const fb = document.getElementById(`fb-${key}`);
+      fb.className = `quiz-feedback show ${isCorrect ? 'ok' : 'err'}`;
+      fb.innerHTML = isCorrect
+        ? `🎉 <strong>ถูกต้องเลย!</strong> ${qObj.explain}`
+        : `💡 <strong>เกือบถูกแล้ว! ลองดูเหตุผลนะ:</strong> ${qObj.explain} (ลองกดเลือกข้อที่ถูกต้องเพื่อบันทึกคะแนนได้เลย!)`;
+
+      // Check if all questions in this step are answered correctly
+      const allCorrect = STEPS_DATA[sIdx].questions.every((q, idx) => {
+        const ans = answeredQuestions[`${sIdx}_${idx}`];
+        return ans !== undefined && (q.anyCorrect || ans === q.answer);
+      });
+
+      if (allCorrect) {
+        completedSteps[sIdx] = true;
+        localStorage.setItem('ysc_cozy_completed', JSON.stringify(completedSteps));
+        const badge = document.getElementById(`quiz-badge-${sIdx}`);
+        if (badge) {
+          badge.innerHTML = '🌟 ผ่านบทเรียนนี้เรียบร้อย!';
+          badge.style.background = '#DCFCE7';
+          badge.style.color = '#166534';
+        }
+      }
+
+      renderSidebar();
+      updateProgressUI();
+    }
+
+    function updateProgressUI() {
+      const doneCount = Object.keys(completedSteps).filter(k => completedSteps[k]).length;
+      const total = STEPS_DATA.length;
+      const pct = Math.round((doneCount / total) * 100);
+      document.getElementById('progressBar').style.width = `${pct}%`;
+      document.getElementById('progressText').innerText = `ผ่านแล้ว ${doneCount}/${total} บทเรียน (${pct}%)`;
+    }
+
+    function goToStep(idx) {
+      currentStep = idx;
+      document.querySelectorAll('.step-section').forEach((sec, i) => {
+        sec.classList.toggle('active', i === idx);
+      });
+      renderSidebar();
+
+      document.getElementById('btnPrev').style.visibility = idx === 0 ? 'hidden' : 'visible';
+      const btnNext = document.getElementById('btnNext');
+      if (idx === STEPS_DATA.length - 1) {
+        btnNext.innerHTML = '🚀 ไปยังเว็บโปรเจกต์จริง!';
+        btnNext.onclick = () => window.open('https://coolnut-academy.github.io/YSC-PM2.5Graph-Signal-Processing/', '_blank');
+      } else {
+        btnNext.innerHTML = 'บทถัดไป ➡️';
+        btnNext.onclick = () => changeStep(1);
+      }
+
+      document.getElementById('stepIndicatorBottom').innerText = `Step ${idx + 1} / ${STEPS_DATA.length}`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function changeStep(delta) {
+      const next = currentStep + delta;
+      if (next >= 0 && next < STEPS_DATA.length) {
+        goToStep(next);
+      }
+    }
+
+    // Interactive Mathematical Simulator in Step 4
+    function updateSimulator() {
+      const d = parseFloat(document.getElementById('simDist').value);
+      const deg = parseFloat(document.getElementById('simAngle').value);
+      const kappa = parseFloat(document.getElementById('simKappa').value);
+      const a_j = parseFloat(document.getElementById('simAnomaly').value);
+      const ell = 50.0; // Reference scale 50 km
+
+      document.getElementById('lblDist').innerText = `${d} กม.`;
+      document.getElementById('lblAngle').innerText = `${deg}°`;
+      document.getElementById('lblKappa').innerText = kappa.toFixed(1);
+      document.getElementById('lblAnomaly').innerText = a_j.toFixed(2);
+
+      const rad = (deg * Math.PI) / 180.0;
+      const D_ij = Math.exp(-d / ell);
+      const W_ij = Math.exp(kappa * (Math.cos(rad) - 1.0));
+      const q_ij = D_ij * W_ij;
+      const signal = q_ij * a_j;
+
+      document.getElementById('outD').innerText = D_ij.toFixed(4);
+      document.getElementById('outW').innerText = W_ij.toFixed(4);
+      document.getElementById('outQ').innerText = q_ij.toFixed(4);
+      document.getElementById('outSignal').innerText = signal.toFixed(4);
+    }
+
+    function toggleQA(btn) {
+      const item = btn.parentElement;
+      item.classList.toggle('open');
+    }
+
+    function resetProgress() {
+      if (confirm('ต้องการล้างข้อมูลความก้าวหน้าและเริ่มทำแบบฝึกหัดใหม่ทั้งหมดใช่ไหมครับ?')) {
+        localStorage.removeItem('ysc_cozy_completed');
+        localStorage.removeItem('ysc_cozy_answers');
+        completedSteps = {};
+        answeredQuestions = {};
+        renderAllQuizzes();
+        renderSidebar();
+        updateProgressUI();
+        goToStep(0);
+      }
+    }
+
+    initApp();
+  </script>
+</body>
+</html>
